@@ -10,6 +10,7 @@
     "lint:fix": "./node_modules/.bin/eslint --ext .ts,.js,.tsx ./ --fix",
     "stylelint": "./node_modules/.bin/stylelint './**/*.scss'",
     "stylelint:fix": "./node_modules/.bin/stylelint './**/*.scss' --fix",
+    "dependencies-check": "depcruise --config .dependency-cruiser.js ./",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
+    "dependency-cruiser": "^12.10.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
     "sass": "^1.58.3",

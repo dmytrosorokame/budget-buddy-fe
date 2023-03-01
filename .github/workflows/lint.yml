@@ -27,3 +27,6 @@ jobs:
 
       - name: Run linters
         run: npm run lint && npm run stylelint
+
+      - name: Check dependencies
+        run: npm run dependencies-check
