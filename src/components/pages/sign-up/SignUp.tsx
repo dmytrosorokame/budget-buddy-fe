@@ -1,8 +1,10 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import React, { FormEvent } from 'react';
 
 import useInput from '@/hooks/use-input';
 import { confirmPasswordValidator, emailValidator, passwordValidator } from '@/utils/validators';
+
+import classes from './SignUp.module.scss';
 
 const SignUp: React.FC = () => {
   const {
@@ -35,21 +37,19 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <Grid container>
-      <Grid item>
-        <Box
-          component="form"
-          sx={{
-            display: 'flex',
-          }}
-          onSubmit={handleSubmit}
-        >
+    <Box className={classes.container}>
+      <Box>
+        <Typography variant="h1" className={classes.title}>
+          BudgetBuddy
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} className={classes.form}>
           <TextField
             label="Email"
             value={emailValue}
             onChange={handleEmailChange}
             error={!!emailError}
             helperText={emailError}
+            className={classes.input}
           />
           <TextField
             type="password"
@@ -58,6 +58,7 @@ const SignUp: React.FC = () => {
             onChange={handlePasswordChange}
             error={!!passwordError}
             helperText={passwordError}
+            className={classes.input}
           />
           <TextField
             type="password"
@@ -66,13 +67,14 @@ const SignUp: React.FC = () => {
             onChange={handleConfirmPasswordChange}
             error={!!confirmPasswordError}
             helperText={confirmPasswordError}
+            className={classes.input}
           />
-          <Button type="submit" disabled={!isValidForm} variant="contained">
-            Submit
+          <Button type="submit" disabled={!isValidForm} variant="contained" className={classes.button}>
+            Sign Up
           </Button>
         </Box>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
