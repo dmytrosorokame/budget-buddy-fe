@@ -2,12 +2,17 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { FormEvent } from 'react';
 
+import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
+import { singUp } from '@/redux/auth/auth.thunks';
+import { useAppDispatch } from '@/redux/store';
 import { confirmPasswordValidator, emailValidator, passwordValidator } from '@/utils/validators';
 
 import classes from './SignUp.module.scss';
 
 const SignUp: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -37,6 +42,10 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
+
+    const payload: IAuthDto = { email: emailValue, password: passwordValue };
+
+    dispatch(singUp(payload));
 
     resetEmail();
     resetPassword();
