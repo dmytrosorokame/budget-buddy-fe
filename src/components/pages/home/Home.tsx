@@ -1,19 +1,17 @@
 import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { logout } from '@/redux/auth/auth.actions';
 import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
+import { useAppSelector } from '@/redux/store';
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
 
-  const userIsLoggedIn = useSelector(selectUserIsLoggedIn);
+  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
 
   const handleLogout = (): void => {
-    dispatch(logout());
+    console.error('logout');
   };
 
   useEffect(() => {

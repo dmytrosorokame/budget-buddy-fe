@@ -2,16 +2,17 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
 
+import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
-import { login } from '@/redux/auth/auth.actions';
+import { login } from '@/redux/auth/auth.thunks';
+import { useAppDispatch } from '@/redux/store';
 import { emailValidator, passwordValidator } from '@/utils/validators';
 
 import classes from './Login.module.scss';
 
 const Login: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const {
@@ -36,7 +37,10 @@ const Login: React.FC = () => {
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
 
-    dispatch(login());
+    const payload: IAuthDto = { email: emailValue, password: passwordValue };
+
+    dispatch(login(payload));
+
     router.push('/');
 
     resetEmail();
