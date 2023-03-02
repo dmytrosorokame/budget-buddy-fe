@@ -2,7 +2,7 @@ import { Box, Button, Grid, TextField } from '@mui/material';
 import React, { FormEvent } from 'react';
 
 import useInput from '@/hooks/use-input';
-import { emailValidator, passwordValidator } from '@/utils/validators';
+import { confirmPasswordValidator, emailValidator, passwordValidator } from '@/utils/validators';
 
 const SignUp: React.FC = () => {
   const {
@@ -22,7 +22,7 @@ const SignUp: React.FC = () => {
     onChange: handleConfirmPasswordChange,
     error: confirmPasswordError,
     reset: resetConfirmPassword,
-  } = useInput({ initialValue: '', validators: [passwordValidator] });
+  } = useInput({ initialValue: '', validators: [confirmPasswordValidator.bind(this, passwordValue)] });
 
   const isValidForm = !emailError && !passwordError && !confirmPasswordError;
 

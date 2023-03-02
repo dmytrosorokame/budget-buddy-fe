@@ -26,7 +26,7 @@ const useInput: TUseInput = ({ initialValue = '', validators = [] }) => {
     setValue(newValue);
 
     const newError = validators
-      .map((validator) => validator(value))
+      .map((validator) => validator(newValue))
       .filter(Boolean)
       .join(', ');
 
