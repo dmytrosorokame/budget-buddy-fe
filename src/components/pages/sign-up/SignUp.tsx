@@ -1,17 +1,20 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
-import React, { FormEvent } from 'react';
+import { useRouter } from 'next/router';
+import React, { FormEvent, useEffect } from 'react';
 
 import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
+import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
 import { singUp } from '@/redux/auth/auth.thunks';
-import { useAppDispatch } from '@/redux/store';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { confirmPasswordValidator, emailValidator, passwordValidator } from '@/utils/validators';
 
 import classes from './SignUp.module.scss';
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const {
     value: emailValue,
@@ -38,6 +41,8 @@ const SignUp: React.FC = () => {
     reset: resetConfirmPassword,
   } = useInput({ initialValue: '', validators: [confirmPasswordValidator.bind(this, passwordValue)] });
 
+  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
+
   const isValidForm = emailIsValid && passwordIsValid && confirmPasswordIsValid;
 
   const handleSubmit = (event: FormEvent): void => {
@@ -51,6 +56,12 @@ const SignUp: React.FC = () => {
     resetPassword();
     resetConfirmPassword();
   };
+
+  useEffect(() => {
+    if (userIsLoggedIn) {
+      router.push('/');
+    }
+  }, [userIsLoggedIn, router]);
 
   return (
     <Box className={classes.container}>

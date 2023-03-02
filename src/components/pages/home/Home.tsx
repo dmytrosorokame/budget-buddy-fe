@@ -12,6 +12,7 @@ const Home: React.FC = () => {
 
   const handleLogout = (): void => {
     console.error('logout');
+    router.reload();
   };
 
   useEffect(() => {
