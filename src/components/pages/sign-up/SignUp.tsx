@@ -9,24 +9,30 @@ import classes from './SignUp.module.scss';
 const SignUp: React.FC = () => {
   const {
     value: emailValue,
+    isValid: emailIsValid,
     onChange: handleEmailChange,
+    onBlur: handleEmailInputBlur,
     error: emailError,
     reset: resetEmail,
   } = useInput({ initialValue: '', validators: [emailValidator] });
   const {
     value: passwordValue,
+    isValid: passwordIsValid,
     onChange: handlePasswordChange,
+    onBlur: handlePasswordInputBlur,
     error: passwordError,
     reset: resetPassword,
   } = useInput({ initialValue: '', validators: [passwordValidator] });
   const {
     value: confirmPasswordValue,
+    isValid: confirmPasswordIsValid,
     onChange: handleConfirmPasswordChange,
+    onBlur: handleConfirmPasswordInputBlur,
     error: confirmPasswordError,
     reset: resetConfirmPassword,
   } = useInput({ initialValue: '', validators: [confirmPasswordValidator.bind(this, passwordValue)] });
 
-  const isValidForm = !emailError && !passwordError && !confirmPasswordError;
+  const isValidForm = emailIsValid && passwordIsValid && confirmPasswordIsValid;
 
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
@@ -47,6 +53,7 @@ const SignUp: React.FC = () => {
             label="Email"
             value={emailValue}
             onChange={handleEmailChange}
+            onBlur={handleEmailInputBlur}
             error={!!emailError}
             helperText={emailError}
             className={classes.input}
@@ -56,6 +63,7 @@ const SignUp: React.FC = () => {
             label="Password"
             value={passwordValue}
             onChange={handlePasswordChange}
+            onBlur={handlePasswordInputBlur}
             error={!!passwordError}
             helperText={passwordError}
             className={classes.input}
@@ -65,6 +73,7 @@ const SignUp: React.FC = () => {
             label="Confirm password"
             value={confirmPasswordValue}
             onChange={handleConfirmPasswordChange}
+            onBlur={handleConfirmPasswordInputBlur}
             error={!!confirmPasswordError}
             helperText={confirmPasswordError}
             className={classes.input}

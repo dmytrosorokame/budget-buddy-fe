@@ -9,8 +9,10 @@ interface IUseInputOptions {
 
 interface IUseInputReturnType {
   value: string;
+  isValid: boolean;
   error: TValidatorError;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
   reset: () => void;
 }
 
@@ -18,27 +20,33 @@ type TUseInput = (data: IUseInputOptions) => IUseInputReturnType;
 
 const useInput: TUseInput = ({ initialValue = '', validators = [] }) => {
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState<TValidatorError>(null);
+  const [isTouched, setIsTouched] = useState(false);
+
+  const validationError = validators
+    .map((validator) => validator(value))
+    .filter(Boolean)
+    .join(', ');
+
+  const isValid = !validationError;
+
+  const error = !isValid && isTouched ? validationError : null;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newValue = event.target.value;
 
     setValue(newValue);
+  };
 
-    const newError = validators
-      .map((validator) => validator(newValue))
-      .filter(Boolean)
-      .join(', ');
-
-    setError(newError);
+  const handleBlur = (): void => {
+    setIsTouched(true);
   };
 
   const reset = (): void => {
     setValue('');
-    setError(null);
+    setIsTouched(false);
   };
 
-  return { value, error, onChange: handleChange, reset };
+  return { value, isValid, error, onChange: handleChange, onBlur: handleBlur, reset };
 };
 
 export default useInput;
