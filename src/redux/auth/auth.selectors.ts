@@ -1,3 +1,3 @@
 import { IState } from 'redux/store';
 
-export const selectUserIsLogin = (state: IState): boolean => state.auth.userIsLogin;
+export const selectUserIsLoggedIn = (state: IState): boolean => state.auth.userIsLoggedIn;

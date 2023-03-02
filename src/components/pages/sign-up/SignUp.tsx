@@ -1,4 +1,5 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
+import Link from 'next/link';
 import React, { FormEvent } from 'react';
 
 import useInput from '@/hooks/use-input';
@@ -46,7 +47,7 @@ const SignUp: React.FC = () => {
     <Box className={classes.container}>
       <Box>
         <Typography variant="h1" className={classes.title}>
-          BudgetBuddy
+          Budget<span>Buddy</span>
         </Typography>
         <Box component="form" onSubmit={handleSubmit} className={classes.form}>
           <TextField
@@ -78,6 +79,9 @@ const SignUp: React.FC = () => {
             helperText={confirmPasswordError}
             className={classes.input}
           />
+          <Typography variant="overline" className={classes.text}>
+            Already have an account? - <Link href="/login">Login</Link>
+          </Typography>
           <Button type="submit" disabled={!isValidForm} variant="contained" className={classes.button}>
             Sign Up
           </Button>
