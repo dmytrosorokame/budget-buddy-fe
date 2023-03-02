@@ -111,10 +111,14 @@ module.exports = {
         '@typescript-eslint/naming-convention': [
           'error',
           {
-            selector: ['default', 'variable', 'property', 'parameter', 'objectLiteralProperty', 'method'],
+            selector: ['default', 'variable', 'parameter', 'objectLiteralProperty', 'method'],
             format: ['camelCase', 'PascalCase'],
             leadingUnderscore: 'forbid',
             trailingUnderscore: 'forbid',
+          },
+          {
+            selector: 'property',
+            format: ['UPPER_CASE', 'camelCase', 'snake_case'],
           },
           {
             selector: 'variable',
