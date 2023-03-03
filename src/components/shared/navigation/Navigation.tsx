@@ -9,7 +9,11 @@ import { logout } from '@/redux/auth/auth.slice';
 import { showModal } from '@/redux/confirmModal/confirmModal.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 
-const Navigation: React.FC = () => {
+interface INavigationProps {
+  title?: string;
+}
+
+const Navigation: React.FC<INavigationProps> = ({ title = 'BuddyBudget' }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -39,7 +43,7 @@ const Navigation: React.FC = () => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          BuddyBudget
+          {title}
         </Typography>
         <Button color="inherit" onClick={logoutButtonClickHandler}>
           Logout

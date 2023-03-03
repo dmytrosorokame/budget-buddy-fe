@@ -1,15 +1,17 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 
+import Container from '@/components/shared/container/Container';
+import Navigation from 'components/shared/navigation/Navigation';
+
 import BudgetsList from './components/BudgetsList/BudgetsList';
-import Navigation from './components/Navigation/Navigation';
 import classes from './Home.module.scss';
 
 const Home: React.FC = () => {
   return (
     <Box>
       <Navigation />
-      <Box className={classes.container}>
+      <Container>
         <Box className={classes.header}>
           <Typography variant="h2" className={classes.title}>
             Welcome back!
@@ -18,7 +20,7 @@ const Home: React.FC = () => {
         </Box>
 
         <BudgetsList />
-      </Box>
+      </Container>
     </Box>
   );
 };
