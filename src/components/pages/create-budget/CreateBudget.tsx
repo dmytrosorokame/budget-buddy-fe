@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
 
+import MandatoryExpenses from './components/MandatoryExpenses/MandatoryExpenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
@@ -35,7 +36,7 @@ const CreateBudget: React.FC = () => {
             />
           </LocalizationProvider>
 
-          <FormControl fullWidth>
+          <FormControl fullWidth className={classes.input}>
             <InputLabel id="currency-input">Currency</InputLabel>
             <Select labelId="currency-input" label="Currency">
               <MenuItem value="UAH">UAH</MenuItem>
@@ -45,6 +46,8 @@ const CreateBudget: React.FC = () => {
           </FormControl>
 
           <TextField label="Sum" type="number" className={classes.input} />
+
+          <MandatoryExpenses />
         </Box>
       </Container>
     </Box>
