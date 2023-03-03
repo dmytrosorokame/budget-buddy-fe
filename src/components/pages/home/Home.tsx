@@ -2,13 +2,13 @@ import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
+import { selectIsAuthenticated } from '@/redux/auth/auth.selectors';
 import { useAppSelector } from '@/redux/store';
 
 const Home: React.FC = () => {
   const router = useRouter();
 
-  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const handleLogout = (): void => {
     console.error('logout');
@@ -16,10 +16,10 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!userIsLoggedIn) {
+    if (!isAuthenticated) {
       router.push('/login');
     }
-  }, [userIsLoggedIn, router]);
+  }, [isAuthenticated, router]);
 
   return <Button onClick={handleLogout}>Logout</Button>;
 };

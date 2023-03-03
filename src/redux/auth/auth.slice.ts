@@ -3,16 +3,24 @@ import { toast } from 'react-toastify';
 
 import { login, singUp } from './auth.thunks';
 
+let token = '';
+
+if (typeof window !== 'undefined') {
+  const tokenFromStorage = window.localStorage.getItem('token');
+
+  if (tokenFromStorage) {
+    token = tokenFromStorage;
+  }
+}
+
 export interface IAuthState {
-  userIsLoggedIn: boolean;
-  accessToken: string;
+  isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: IAuthState = {
-  userIsLoggedIn: false,
-  accessToken: '',
+  isAuthenticated: !!token,
   isLoading: false,
   error: null,
 };
@@ -31,8 +39,9 @@ export const authSlice = createSlice({
       toast.success('You registered!');
 
       state.isLoading = false;
-      state.userIsLoggedIn = true;
-      state.accessToken = payload.access_token;
+      state.isAuthenticated = true;
+
+      localStorage.setItem('token', payload.access_token);
     });
     builder.addCase(singUp.rejected, (state, { payload }: AnyAction): void => {
       const errorMessage = payload.message ?? 'Something went wrong';
@@ -52,8 +61,9 @@ export const authSlice = createSlice({
       toast.success('You loggedIn!');
 
       state.isLoading = false;
-      state.userIsLoggedIn = true;
-      state.accessToken = payload.access_token;
+      state.isAuthenticated = true;
+
+      localStorage.setItem('token', payload.access_token);
     });
     builder.addCase(login.rejected, (state, { payload }: AnyAction): void => {
       const errorMessage = payload.message ?? 'Something went wrong';
