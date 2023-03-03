@@ -39,7 +39,7 @@ const Navigation: React.FC = () => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          News
+          BuddyBudget
         </Typography>
         <Button color="inherit" onClick={logoutButtonClickHandler}>
           Logout
