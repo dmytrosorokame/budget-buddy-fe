@@ -1,6 +1,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { DateTime } from 'luxon';
 import React, { useMemo, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
@@ -12,7 +13,7 @@ import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
-  const [dateValue, setDateValue] = useState<Date | null>(null);
+  const [dateValue, setDateValue] = useState<DateTime | null>(null);
   const [incomeValue, setIncomeValue] = useState('');
 
   const { expenses } = useExpensesContext();
@@ -21,7 +22,7 @@ const CreateBudget: React.FC = () => {
     setIncomeValue(event.target.value);
   };
 
-  const dateChangeHandler = (newValue: Date | null): void => {
+  const dateChangeHandler = (newValue: DateTime | null): void => {
     setDateValue(newValue);
   };
 
@@ -43,6 +44,11 @@ const CreateBudget: React.FC = () => {
   const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
   const incomeWithoutMandatoryAndOtherExpenses = incomeWithoutMandatoryExpenses - otherExpensesSum;
   const incomeWithoutAllExpensesAndInvestments = incomeWithoutMandatoryAndOtherExpenses - investmentsSum;
+
+  const moneyForOneDay =
+    dateValue?.daysInMonth && incomeValue
+      ? Math.round(incomeWithoutAllExpensesAndInvestments / dateValue?.daysInMonth)
+      : null;
 
   return (
     <Box>
@@ -102,6 +108,12 @@ const CreateBudget: React.FC = () => {
             resultText="Income without all expenses and investments"
             resultSum={incomeWithoutAllExpensesAndInvestments}
           />
+
+          {moneyForOneDay && (
+            <Typography className={classes.result}>
+              You can spend <span>{moneyForOneDay}</span> for one day!
+            </Typography>
+          )}
         </Box>
       </Container>
     </Box>
