@@ -15,6 +15,8 @@ const CreateBudget: React.FC = () => {
   const [incomeValue, setIncomeValue] = useState(0);
 
   const [mandatoryExpenses, setMandatoryExpenses] = useState<IExpense[]>([]);
+  const [otherExpenses, setOtherExpenses] = useState<IExpense[]>([]);
+  const [investments, setInvestments] = useState<IExpense[]>([]);
 
   const incomeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setIncomeValue(+event.target.value);
@@ -25,8 +27,12 @@ const CreateBudget: React.FC = () => {
   };
 
   const mandatoryExpensesSum = mandatoryExpenses.reduce((acc, expense) => acc + +expense.amount, 0);
+  const otherExpensesSum = otherExpenses.reduce((acc, expense) => acc + +expense.amount, 0);
+  const investmentsSum = investments.reduce((acc, investment) => acc + +investment.amount, 0);
 
-  const incomeSumWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
+  const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
+  const incomeWithoutMandatoryAndOtherExpenses = incomeWithoutMandatoryExpenses - otherExpensesSum;
+  const incomeWithoutAllExpensesAndInvestments = incomeWithoutMandatoryAndOtherExpenses - investmentsSum;
 
   return (
     <Box>
@@ -70,7 +76,21 @@ const CreateBudget: React.FC = () => {
           <Expenses expenses={mandatoryExpenses} setExpenses={setMandatoryExpenses} />
 
           <Typography className={classes.subtitle}>
-            Income without Mandatory Expenses - {incomeSumWithoutMandatoryExpenses}
+            Income without Mandatory Expenses - {incomeWithoutMandatoryExpenses}
+          </Typography>
+
+          <Typography className={classes.subtitle}>Others Expenses</Typography>
+          <Expenses expenses={otherExpenses} setExpenses={setOtherExpenses} />
+
+          <Typography className={classes.subtitle}>
+            Income without Mandatory and Other Expenses - {incomeWithoutMandatoryAndOtherExpenses}
+          </Typography>
+
+          <Typography className={classes.subtitle}>Investments</Typography>
+          <Expenses expenses={investments} setExpenses={setInvestments} />
+
+          <Typography className={classes.subtitle}>
+            Income without all expenses and investments - {incomeWithoutAllExpensesAndInvestments}
           </Typography>
         </Box>
       </Container>
