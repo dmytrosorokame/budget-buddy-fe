@@ -1,7 +1,8 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
+import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
@@ -13,6 +14,8 @@ import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
+  const router = useRouter();
+
   const [dateValue, setDateValue] = useState<DateTime | null>(null);
   const [incomeValue, setIncomeValue] = useState('');
 
@@ -49,6 +52,15 @@ const CreateBudget: React.FC = () => {
     dateValue?.daysInMonth && incomeValue
       ? Math.round(incomeWithoutAllExpensesAndInvestments / dateValue?.daysInMonth)
       : null;
+
+  const cancelHandler = (): void => {
+    router.push('/');
+  };
+
+  const saveHandler = (): void => {
+    console.warn('Saved');
+    router.push('/');
+  };
 
   return (
     <Box>
@@ -114,6 +126,15 @@ const CreateBudget: React.FC = () => {
               You can spend <span>{moneyForOneDay}</span> for one day!
             </Typography>
           )}
+
+          <Box className={classes.buttons}>
+            <Button className={classes.button} variant="outlined" onClick={cancelHandler}>
+              Cancel
+            </Button>
+            <Button className={classes.button} variant="contained" onClick={saveHandler}>
+              Save
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>

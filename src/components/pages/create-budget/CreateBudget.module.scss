@@ -26,3 +26,13 @@
         font-weight: 400;
     }
 }
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.button {
+    width: 45%;
+}
