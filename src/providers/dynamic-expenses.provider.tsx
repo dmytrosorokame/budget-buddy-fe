@@ -8,6 +8,7 @@ interface IDynamicExpensesContext {
   addExpenseHandler: () => void;
   expenseNameChangeHandler: (id: string, name: string) => void;
   expenseAmountChangeHandler: (id: string, amount: number) => void;
+  removeExpenseHandler: (id: string) => void;
 }
 
 const dynamicExpensesContext = createContext<IDynamicExpensesContext>({
@@ -19,6 +20,9 @@ const dynamicExpensesContext = createContext<IDynamicExpensesContext>({
     return;
   },
   expenseAmountChangeHandler: () => {
+    return;
+  },
+  removeExpenseHandler: () => {
     return;
   },
 });
@@ -46,6 +50,10 @@ export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children 
     setExpenses((prev) => [...prev, newExpense]);
   };
 
+  const removeExpenseHandler = (id: string): void => {
+    setExpenses((prev) => prev.filter((expense) => expense.id !== id));
+  };
+
   const expenseNameChangeHandler = (id: string, name: string): void => {
     changeExpenseHandler(id, 'name', name);
   };
@@ -56,7 +64,13 @@ export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children 
 
   return (
     <dynamicExpensesContext.Provider
-      value={{ expenses, addExpenseHandler, expenseNameChangeHandler, expenseAmountChangeHandler }}
+      value={{
+        expenses,
+        addExpenseHandler,
+        expenseNameChangeHandler,
+        expenseAmountChangeHandler,
+        removeExpenseHandler,
+      }}
     >
       {children}
     </dynamicExpensesContext.Provider>

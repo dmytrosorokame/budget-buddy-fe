@@ -1,15 +1,18 @@
-import { Box, TextField } from '@mui/material';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { Box, IconButton, TextField } from '@mui/material';
 import React from 'react';
 
 import { useDynamicExpensesContext } from '@/providers/dynamic-expenses.provider';
 import { IExpense } from '@/types/expenses.types';
+
+import classes from './Expense.module.scss';
 
 interface IExpenseProps {
   expense: IExpense;
 }
 
 const Expense: React.FC<IExpenseProps> = ({ expense }) => {
-  const { expenseNameChangeHandler, expenseAmountChangeHandler } = useDynamicExpensesContext();
+  const { expenseNameChangeHandler, expenseAmountChangeHandler, removeExpenseHandler } = useDynamicExpensesContext();
 
   const changeNameHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     expenseNameChangeHandler(expense.id, event.target.value);
@@ -20,9 +23,12 @@ const Expense: React.FC<IExpenseProps> = ({ expense }) => {
   };
 
   return (
-    <Box>
-      <TextField value={expense.name} onChange={changeNameHandler} />
-      <TextField value={expense.amount} onChange={changeAmountHandler} type="number" fullWidth />
+    <Box className={classes.wrapper}>
+      <TextField value={expense.name} onChange={changeNameHandler} className={classes.input} />
+      <TextField value={expense.amount} onChange={changeAmountHandler} type="number" className={classes.input} />
+      <IconButton onClick={removeExpenseHandler.bind(this, expense.id)}>
+        <RemoveCircleIcon />
+      </IconButton>
     </Box>
   );
 };
