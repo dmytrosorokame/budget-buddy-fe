@@ -1,0 +1,40 @@
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 20px;
+    margin-bottom: 20px;
+    padding: 20px 50px;
+}
+
+.wrapper {
+    width: 100%;
+}
+
+.month {
+    text-align: center;
+    font-weight: 300;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.text {
+    font-size: 13px;
+}
+
+.red {
+    color: #b2102f;
+}
+
+.green {
+    color: #00a152;
+}
+
+.yellow {
+    color: #b2a300;
+}

@@ -1,27 +1,28 @@
-import { Button } from '@mui/material';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 
-import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
-import { useAppSelector } from '@/redux/store';
+import Container from '@/components/shared/container/Container';
+import Navigation from 'components/shared/navigation/Navigation';
+
+import BudgetsList from './components/BudgetsList/BudgetsList';
+import classes from './Home.module.scss';
 
 const Home: React.FC = () => {
-  const router = useRouter();
+  return (
+    <Box>
+      <Navigation />
+      <Container>
+        <Box className={classes.header}>
+          <Typography variant="h2" className={classes.title}>
+            Welcome back!
+          </Typography>
+          <Typography variant="h5">This is your budget 🤑</Typography>
+        </Box>
 
-  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
-
-  const handleLogout = (): void => {
-    console.error('logout');
-    router.reload();
-  };
-
-  useEffect(() => {
-    if (!userIsLoggedIn) {
-      router.push('/login');
-    }
-  }, [userIsLoggedIn, router]);
-
-  return <Button onClick={handleLogout}>Logout</Button>;
+        <BudgetsList />
+      </Container>
+    </Box>
+  );
 };
 
 export default Home;

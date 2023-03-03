@@ -5,7 +5,7 @@ import React, { FormEvent, useEffect } from 'react';
 
 import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
-import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
+import { selectIsAuthenticated } from '@/redux/auth/auth.selectors';
 import { singUp } from '@/redux/auth/auth.thunks';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { confirmPasswordValidator, emailValidator, passwordValidator } from '@/utils/validators';
@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
     reset: resetConfirmPassword,
   } = useInput({ initialValue: '', validators: [confirmPasswordValidator.bind(this, passwordValue)] });
 
-  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const isValidForm = emailIsValid && passwordIsValid && confirmPasswordIsValid;
 
@@ -58,10 +58,10 @@ const SignUp: React.FC = () => {
   };
 
   useEffect(() => {
-    if (userIsLoggedIn) {
+    if (isAuthenticated) {
       router.push('/');
     }
-  }, [userIsLoggedIn, router]);
+  }, [isAuthenticated, router]);
 
   return (
     <Box className={classes.container}>

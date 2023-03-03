@@ -2,10 +2,11 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
-import { selectUserIsLoggedIn } from '@/redux/auth/auth.selectors';
+import { selectIsAuthenticated } from '@/redux/auth/auth.selectors';
 import { login } from '@/redux/auth/auth.thunks';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { emailValidator, passwordValidator } from '@/utils/validators';
@@ -33,12 +34,14 @@ const Login: React.FC = () => {
     reset: resetPassword,
   } = useInput({ initialValue: '', validators: [passwordValidator] });
 
-  const userIsLoggedIn = useAppSelector(selectUserIsLoggedIn);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const isValidForm = emailIsValid && passwordIsValid;
 
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
+
+    toast.success('asdasda');
 
     const payload: IAuthDto = { email: emailValue, password: passwordValue };
 
@@ -49,10 +52,10 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    if (userIsLoggedIn) {
+    if (isAuthenticated) {
       router.push('/');
     }
-  }, [userIsLoggedIn, router]);
+  }, [isAuthenticated, router]);
 
   return (
     <Box className={classes.container}>
