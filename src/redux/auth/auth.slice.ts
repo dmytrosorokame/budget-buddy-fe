@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
 import { login, singUp } from './auth.thunks';
@@ -34,12 +34,14 @@ export const authSlice = createSlice({
       state.userIsLoggedIn = true;
       state.accessToken = payload.access_token;
     });
-    builder.addCase(singUp.rejected, (state, { payload }): void => {
+    builder.addCase(singUp.rejected, (state, { payload }: AnyAction): void => {
+      const errorMessage = payload.message ?? 'Something went wrong';
+
       toast.dismiss();
       toast.error('Register failed!');
 
       state.isLoading = false;
-      state.error = payload?.error?.message;
+      state.error = errorMessage;
     });
     builder.addCase(login.pending, (state): void => {
       toast.loading('Login pending');
@@ -53,12 +55,14 @@ export const authSlice = createSlice({
       state.userIsLoggedIn = true;
       state.accessToken = payload.access_token;
     });
-    builder.addCase(login.rejected, (state, { payload }): void => {
+    builder.addCase(login.rejected, (state, { payload }: AnyAction): void => {
+      const errorMessage = payload.message ?? 'Something went wrong';
+
       toast.dismiss();
-      toast.error('Login failed!');
+      toast.error(errorMessage);
 
       state.isLoading = false;
-      state.error = payload?.error?.message;
+      state.error = errorMessage;
     });
   },
 });
