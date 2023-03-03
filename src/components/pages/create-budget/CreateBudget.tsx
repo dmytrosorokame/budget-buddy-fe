@@ -5,16 +5,28 @@ import React, { useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
+import { IExpense } from '@/types/expenses.types';
 
 import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
-  const [value, setValue] = useState<Date | null>(null);
+  const [dateValue, setDateValue] = useState<Date | null>(null);
+  const [incomeValue, setIncomeValue] = useState(0);
+
+  const [mandatoryExpenses, setMandatoryExpenses] = useState<IExpense[]>([]);
+
+  const incomeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setIncomeValue(+event.target.value);
+  };
 
   const dateChangeHandler = (newValue: Date | null): void => {
-    setValue(newValue);
+    setDateValue(newValue);
   };
+
+  const mandatoryExpensesSum = mandatoryExpenses.reduce((acc, expense) => acc + +expense.amount, 0);
+
+  const incomeSumWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
 
   return (
     <Box>
@@ -30,7 +42,7 @@ const CreateBudget: React.FC = () => {
               label="Month"
               views={['month']}
               inputFormat="MMMM"
-              value={value}
+              value={dateValue}
               onChange={dateChangeHandler}
               renderInput={(params) => <TextField {...params} />}
               className={classes.input}
@@ -46,10 +58,20 @@ const CreateBudget: React.FC = () => {
             </Select>
           </FormControl>
 
-          <TextField label="Sum" type="number" className={classes.input} />
+          <TextField
+            value={incomeValue}
+            onChange={incomeChangeHandler}
+            label="Income"
+            type="number"
+            className={classes.input}
+          />
 
           <Typography className={classes.subtitle}>Mandatory Expenses</Typography>
-          <Expenses />
+          <Expenses expenses={mandatoryExpenses} setExpenses={setMandatoryExpenses} />
+
+          <Typography className={classes.subtitle}>
+            Income without Mandatory Expenses - {incomeSumWithoutMandatoryExpenses}
+          </Typography>
         </Box>
       </Container>
     </Box>

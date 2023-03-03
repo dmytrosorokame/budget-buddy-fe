@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IExpense } from '@/types/expenses.types';
@@ -29,9 +29,17 @@ const dynamicExpensesContext = createContext<IDynamicExpensesContext>({
 
 export const useDynamicExpensesContext = (): IDynamicExpensesContext => useContext(dynamicExpensesContext);
 
-export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [expenses, setExpenses] = useState<IExpense[]>([]);
+interface IDynamicExpensesProviderProps {
+  expenses: IExpense[];
+  setExpenses: Dispatch<SetStateAction<IExpense[]>>;
+  children: JSX.Element;
+}
 
+export const DynamicExpensesProvider: React.FC<IDynamicExpensesProviderProps> = ({
+  expenses,
+  setExpenses,
+  children,
+}) => {
   const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string): void => {
     const expensesCopy = [...expenses];
 
