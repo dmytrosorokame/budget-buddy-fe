@@ -2,6 +2,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import { IAuthDto } from '@/api/auth/auth.dto';
 import useInput from '@/hooks/use-input';
@@ -39,6 +40,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = (event: FormEvent): void => {
     event.preventDefault();
+
+    toast.success('asdasda');
 
     const payload: IAuthDto = { email: emailValue, password: passwordValue };
 
