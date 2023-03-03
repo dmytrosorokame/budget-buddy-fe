@@ -1,7 +1,7 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
@@ -13,21 +13,32 @@ import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
   const [dateValue, setDateValue] = useState<Date | null>(null);
-  const [incomeValue, setIncomeValue] = useState(0);
+  const [incomeValue, setIncomeValue] = useState('');
 
   const { expenses } = useExpensesContext();
 
   const incomeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setIncomeValue(+event.target.value);
+    setIncomeValue(event.target.value);
   };
 
   const dateChangeHandler = (newValue: Date | null): void => {
     setDateValue(newValue);
   };
 
-  const mandatoryExpensesSum = expenses[ExpensesTypes.MANDATORY].reduce((acc, expense) => acc + +expense.amount, 0);
-  const otherExpensesSum = expenses[ExpensesTypes.OTHER].reduce((acc, expense) => acc + +expense.amount, 0);
-  const investmentsSum = expenses[ExpensesTypes.INVESTMENTS].reduce((acc, expense) => acc + +expense.amount, 0);
+  const mandatoryExpensesSum = useMemo(
+    () => expenses[ExpensesTypes.MANDATORY].reduce((acc, expense) => acc + +expense.amount, 0),
+    [expenses],
+  );
+
+  const otherExpensesSum = useMemo(
+    () => expenses[ExpensesTypes.OTHER].reduce((acc, expense) => acc + +expense.amount, 0),
+    [expenses],
+  );
+
+  const investmentsSum = useMemo(
+    () => expenses[ExpensesTypes.INVESTMENTS].reduce((acc, expense) => acc + +expense.amount, 0),
+    [expenses],
+  );
 
   const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
   const incomeWithoutMandatoryAndOtherExpenses = incomeWithoutMandatoryExpenses - otherExpensesSum;
