@@ -9,8 +9,8 @@ import classes from './BudgetsList.module.scss';
 const BudgetsList: React.FC = () => {
   return (
     <Box className={classes.list}>
-      <BudgetItem />
       <AddBudget />
+      <BudgetItem />
     </Box>
   );
 };

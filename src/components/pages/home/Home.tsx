@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import BudgetsList from './components/BudgetsList/BudgetsList';
@@ -10,6 +10,13 @@ const Home: React.FC = () => {
     <Box>
       <Navigation />
       <Box className={classes.container}>
+        <Box className={classes.header}>
+          <Typography variant="h2" className={classes.title}>
+            Welcome back!
+          </Typography>
+          <Typography variant="h5">This is your budget 🤑</Typography>
+        </Box>
+
         <BudgetsList />
       </Box>
     </Box>
