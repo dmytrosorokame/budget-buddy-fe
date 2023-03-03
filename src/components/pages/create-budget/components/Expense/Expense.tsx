@@ -19,15 +19,21 @@ const Expense: React.FC<IExpenseProps> = ({ expense }) => {
   };
 
   const changeAmountHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    expenseAmountChangeHandler(expense.id, +event.target.value);
+    expenseAmountChangeHandler(expense.id, event.target.value);
   };
 
   return (
     <Box className={classes.wrapper}>
-      <TextField value={expense.name} onChange={changeNameHandler} className={classes.input} />
-      <TextField value={expense.amount} onChange={changeAmountHandler} type="number" className={classes.input} />
+      <TextField label="Name" value={expense.name} onChange={changeNameHandler} className={classes.input} />
+      <TextField
+        label="Amount"
+        value={expense.amount}
+        onChange={changeAmountHandler}
+        type="number"
+        className={classes.input}
+      />
       <IconButton onClick={removeExpenseHandler.bind(this, expense.id)}>
-        <RemoveCircleIcon />
+        <RemoveCircleIcon color="error" />
       </IconButton>
     </Box>
   );

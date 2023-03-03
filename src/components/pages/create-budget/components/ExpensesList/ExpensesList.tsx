@@ -5,6 +5,8 @@ import React from 'react';
 import { useDynamicExpensesContext } from '@/providers/dynamic-expenses.provider';
 import Expense from 'components/pages/create-budget/components/Expense/Expense';
 
+import classes from './ExpensesList.module.scss';
+
 const ExpensesList: React.FC = () => {
   const { expenses, addExpenseHandler } = useDynamicExpensesContext();
 
@@ -13,8 +15,8 @@ const ExpensesList: React.FC = () => {
       {expenses.map((expense) => (
         <Expense key={expense.id} expense={expense} />
       ))}
-      <IconButton onClick={addExpenseHandler}>
-        <AddCircleIcon />
+      <IconButton onClick={addExpenseHandler} className={classes.button}>
+        <AddCircleIcon color="primary" />
       </IconButton>
     </Box>
   );

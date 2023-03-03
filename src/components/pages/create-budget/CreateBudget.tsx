@@ -6,13 +6,13 @@ import React, { useState } from 'react';
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
 
-import MandatoryExpenses from './components/MandatoryExpenses/MandatoryExpenses';
+import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<Date | null>(null);
 
-  const dateChangeHandler = (newValue: unknown): void => {
+  const dateChangeHandler = (newValue: Date | null): void => {
     setValue(newValue);
   };
 
@@ -29,6 +29,7 @@ const CreateBudget: React.FC = () => {
             <DatePicker
               label="Month"
               views={['month']}
+              inputFormat="MMMM"
               value={value}
               onChange={dateChangeHandler}
               renderInput={(params) => <TextField {...params} />}
@@ -47,7 +48,8 @@ const CreateBudget: React.FC = () => {
 
           <TextField label="Sum" type="number" className={classes.input} />
 
-          <MandatoryExpenses />
+          <Typography className={classes.subtitle}>Mandatory Expenses</Typography>
+          <Expenses />
         </Box>
       </Container>
     </Box>

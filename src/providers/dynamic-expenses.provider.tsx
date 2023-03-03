@@ -7,7 +7,7 @@ interface IDynamicExpensesContext {
   expenses: IExpense[];
   addExpenseHandler: () => void;
   expenseNameChangeHandler: (id: string, name: string) => void;
-  expenseAmountChangeHandler: (id: string, amount: number) => void;
+  expenseAmountChangeHandler: (id: string, amount: string) => void;
   removeExpenseHandler: (id: string) => void;
 }
 
@@ -32,7 +32,7 @@ export const useDynamicExpensesContext = (): IDynamicExpensesContext => useConte
 export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
 
-  const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string | number): void => {
+  const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string): void => {
     const expensesCopy = [...expenses];
 
     const currentExpenseIndex = expensesCopy.findIndex((expense) => expense.id === id);
@@ -45,7 +45,7 @@ export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children 
   };
 
   const addExpenseHandler = (): void => {
-    const newExpense: IExpense = { id: uuidv4(), name: '', amount: 0 };
+    const newExpense: IExpense = { id: uuidv4(), name: '', amount: '' };
 
     setExpenses((prev) => [...prev, newExpense]);
   };
@@ -58,7 +58,7 @@ export const DynamicExpensesProvider: React.FC<PropsWithChildren> = ({ children 
     changeExpenseHandler(id, 'name', name);
   };
 
-  const expenseAmountChangeHandler = (id: string, amount: number): void => {
+  const expenseAmountChangeHandler = (id: string, amount: string): void => {
     changeExpenseHandler(id, 'amount', amount);
   };
 
