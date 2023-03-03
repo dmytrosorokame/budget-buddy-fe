@@ -2,6 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import { selectIsAuthenticated } from '@/redux/auth/auth.selectors';
 import { logout } from '@/redux/auth/auth.slice';
@@ -17,6 +18,8 @@ const Navigation: React.FC = () => {
   const handleLogout = (): void => {
     dispatch(logout());
     router.push('/login');
+
+    toast.success('You logged out!');
   };
 
   const logoutButtonClickHandler = (): void => {
