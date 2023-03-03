@@ -28,7 +28,12 @@ const initialState: IAuthState = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state): void => {
+      state.isAuthenticated = false;
+      localStorage.removeItem('token');
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(singUp.pending, (state): void => {
       toast.loading('SignUp pending');
@@ -76,3 +81,5 @@ export const authSlice = createSlice({
     });
   },
 });
+
+export const { logout } = authSlice.actions;

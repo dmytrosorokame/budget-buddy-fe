@@ -3,16 +3,18 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
 import { selectIsAuthenticated } from '@/redux/auth/auth.selectors';
-import { useAppSelector } from '@/redux/store';
+import { logout } from '@/redux/auth/auth.slice';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
 
 const Home: React.FC = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const handleLogout = (): void => {
-    console.error('logout');
-    router.reload();
+    dispatch(logout());
+    router.push('/login');
   };
 
   useEffect(() => {
