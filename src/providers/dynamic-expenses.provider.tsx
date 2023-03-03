@@ -1,18 +1,28 @@
-import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { IExpense } from '@/types/expenses.types';
+import { ExpensesTypes, IExpense } from '@/types/expenses.types';
 
-interface IDynamicExpensesContext {
-  expenses: IExpense[];
-  addExpenseHandler: () => void;
-  expenseNameChangeHandler: (id: string, name: string) => void;
-  expenseAmountChangeHandler: (id: string, amount: string) => void;
-  removeExpenseHandler: (id: string) => void;
+interface IExpensesState {
+  [ExpensesTypes.MANDATORY]: IExpense[];
+  [ExpensesTypes.OTHER]: IExpense[];
+  [ExpensesTypes.INVESTMENTS]: IExpense[];
 }
 
-const dynamicExpensesContext = createContext<IDynamicExpensesContext>({
-  expenses: [],
+interface IExpensesContext {
+  expenses: IExpensesState;
+  addExpenseHandler: (type: ExpensesTypes) => void;
+  expenseNameChangeHandler: (id: string, type: ExpensesTypes, name: string) => void;
+  expenseAmountChangeHandler: (id: string, type: ExpensesTypes, amount: string) => void;
+  removeExpenseHandler: (id: string, type: ExpensesTypes) => void;
+}
+
+const expensesContext = createContext<IExpensesContext>({
+  expenses: {
+    [ExpensesTypes.MANDATORY]: [],
+    [ExpensesTypes.OTHER]: [],
+    [ExpensesTypes.INVESTMENTS]: [],
+  },
   addExpenseHandler: () => {
     return;
   },
@@ -27,51 +37,45 @@ const dynamicExpensesContext = createContext<IDynamicExpensesContext>({
   },
 });
 
-export const useDynamicExpensesContext = (): IDynamicExpensesContext => useContext(dynamicExpensesContext);
+export const useExpensesContext = (): IExpensesContext => useContext(expensesContext);
 
-interface IDynamicExpensesProviderProps {
-  expenses: IExpense[];
-  setExpenses: Dispatch<SetStateAction<IExpense[]>>;
-  children: JSX.Element;
-}
+export const ExpensesProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  const [expenses, setExpenses] = useState<IExpensesState>({ mandatory: [], other: [], investments: [] });
 
-export const DynamicExpensesProvider: React.FC<IDynamicExpensesProviderProps> = ({
-  expenses,
-  setExpenses,
-  children,
-}) => {
-  const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string): void => {
-    const expensesCopy = [...expenses];
+  const changeExpenseHandler = (id: string, type: ExpensesTypes, fieldName: keyof IExpense, value: string): void => {
+    const expensesCopy = { ...expenses };
 
-    const currentExpenseIndex = expensesCopy.findIndex((expense) => expense.id === id);
-    const currentExpenseCopy: IExpense = { ...expensesCopy[currentExpenseIndex] };
+    const currentExpensesByTypeCopy = expensesCopy[type];
+
+    const currentExpenseIndex = currentExpensesByTypeCopy.findIndex((expense) => expense.id === id);
+    const currentExpenseCopy: IExpense = { ...currentExpensesByTypeCopy[currentExpenseIndex] };
 
     currentExpenseCopy[fieldName] = value as never;
-    expensesCopy[currentExpenseIndex] = currentExpenseCopy;
+    currentExpensesByTypeCopy[currentExpenseIndex] = currentExpenseCopy;
 
     setExpenses(expensesCopy);
   };
 
-  const addExpenseHandler = (): void => {
+  const addExpenseHandler = (type: ExpensesTypes): void => {
     const newExpense: IExpense = { id: uuidv4(), name: '', amount: '' };
 
-    setExpenses((prev) => [...prev, newExpense]);
+    setExpenses((prev) => ({ ...prev, [type]: [...prev[type], newExpense] }));
   };
 
-  const removeExpenseHandler = (id: string): void => {
-    setExpenses((prev) => prev.filter((expense) => expense.id !== id));
+  const removeExpenseHandler = (id: string, type: ExpensesTypes): void => {
+    setExpenses((prev) => ({ ...prev, [type]: prev[type].filter((expense) => expense.id !== id) }));
   };
 
-  const expenseNameChangeHandler = (id: string, name: string): void => {
-    changeExpenseHandler(id, 'name', name);
+  const expenseNameChangeHandler = (id: string, type: ExpensesTypes, name: string): void => {
+    changeExpenseHandler(id, type, 'name', name);
   };
 
-  const expenseAmountChangeHandler = (id: string, amount: string): void => {
-    changeExpenseHandler(id, 'amount', amount);
+  const expenseAmountChangeHandler = (id: string, type: ExpensesTypes, amount: string): void => {
+    changeExpenseHandler(id, type, 'amount', amount);
   };
 
   return (
-    <dynamicExpensesContext.Provider
+    <expensesContext.Provider
       value={{
         expenses,
         addExpenseHandler,
@@ -81,6 +85,6 @@ export const DynamicExpensesProvider: React.FC<IDynamicExpensesProviderProps> = 
       }}
     >
       {children}
-    </dynamicExpensesContext.Provider>
+    </expensesContext.Provider>
   );
 };

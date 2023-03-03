@@ -5,7 +5,8 @@ import React, { useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
-import { IExpense } from '@/types/expenses.types';
+import { useExpensesContext } from '@/providers/dynamic-expenses.provider';
+import { ExpensesTypes } from '@/types/expenses.types';
 
 import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
@@ -14,9 +15,7 @@ const CreateBudget: React.FC = () => {
   const [dateValue, setDateValue] = useState<Date | null>(null);
   const [incomeValue, setIncomeValue] = useState(0);
 
-  const [mandatoryExpenses, setMandatoryExpenses] = useState<IExpense[]>([]);
-  const [otherExpenses, setOtherExpenses] = useState<IExpense[]>([]);
-  const [investments, setInvestments] = useState<IExpense[]>([]);
+  const { expenses } = useExpensesContext();
 
   const incomeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setIncomeValue(+event.target.value);
@@ -26,9 +25,9 @@ const CreateBudget: React.FC = () => {
     setDateValue(newValue);
   };
 
-  const mandatoryExpensesSum = mandatoryExpenses.reduce((acc, expense) => acc + +expense.amount, 0);
-  const otherExpensesSum = otherExpenses.reduce((acc, expense) => acc + +expense.amount, 0);
-  const investmentsSum = investments.reduce((acc, investment) => acc + +investment.amount, 0);
+  const mandatoryExpensesSum = expenses[ExpensesTypes.MANDATORY].reduce((acc, expense) => acc + +expense.amount, 0);
+  const otherExpensesSum = expenses[ExpensesTypes.OTHER].reduce((acc, expense) => acc + +expense.amount, 0);
+  const investmentsSum = expenses[ExpensesTypes.INVESTMENTS].reduce((acc, expense) => acc + +expense.amount, 0);
 
   const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
   const incomeWithoutMandatoryAndOtherExpenses = incomeWithoutMandatoryExpenses - otherExpensesSum;
@@ -72,26 +71,26 @@ const CreateBudget: React.FC = () => {
             className={classes.input}
           />
 
-          <Typography className={classes.subtitle}>Mandatory Expenses</Typography>
-          <Expenses expenses={mandatoryExpenses} setExpenses={setMandatoryExpenses} />
+          <Expenses
+            title="Mandatory Expenses"
+            type={ExpensesTypes.MANDATORY}
+            resultText="Income without Mandatory Expenses"
+            resultSum={incomeWithoutMandatoryExpenses}
+          />
 
-          <Typography className={classes.subtitle}>
-            Income without Mandatory Expenses - {incomeWithoutMandatoryExpenses}
-          </Typography>
+          <Expenses
+            title="Other Expenses"
+            type={ExpensesTypes.OTHER}
+            resultText="Income without Mandatory and Other Expenses"
+            resultSum={incomeWithoutMandatoryAndOtherExpenses}
+          />
 
-          <Typography className={classes.subtitle}>Others Expenses</Typography>
-          <Expenses expenses={otherExpenses} setExpenses={setOtherExpenses} />
-
-          <Typography className={classes.subtitle}>
-            Income without Mandatory and Other Expenses - {incomeWithoutMandatoryAndOtherExpenses}
-          </Typography>
-
-          <Typography className={classes.subtitle}>Investments</Typography>
-          <Expenses expenses={investments} setExpenses={setInvestments} />
-
-          <Typography className={classes.subtitle}>
-            Income without all expenses and investments - {incomeWithoutAllExpensesAndInvestments}
-          </Typography>
+          <Expenses
+            title="Investments"
+            type={ExpensesTypes.INVESTMENTS}
+            resultText="Income without all expenses and investments"
+            resultSum={incomeWithoutAllExpensesAndInvestments}
+          />
         </Box>
       </Container>
     </Box>

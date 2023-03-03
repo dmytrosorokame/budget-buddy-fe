@@ -3,3 +3,9 @@ export interface IExpense {
   name: string;
   amount: string;
 }
+
+export enum ExpensesTypes {
+  MANDATORY = 'mandatory',
+  OTHER = 'other',
+  INVESTMENTS = 'investments',
+}
