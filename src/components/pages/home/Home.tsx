@@ -12,8 +12,6 @@ import classes from './Home.module.scss';
 const Home: React.FC = () => {
   const budgets = useAppSelector(selectAllBudgets);
 
-  console.warn({ budgets });
-
   return (
     <Box>
       <Navigation />
@@ -25,7 +23,7 @@ const Home: React.FC = () => {
           <Typography variant="h5">This is your budget 🤑</Typography>
         </Box>
 
-        <BudgetsList />
+        <BudgetsList budgets={budgets} />
       </Container>
     </Box>
   );

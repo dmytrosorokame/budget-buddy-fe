@@ -2,19 +2,17 @@ import { Box, Card, Divider, Typography } from '@mui/material';
 import cn from 'classnames';
 import React from 'react';
 
+import { IBudget } from '@/types/budgets.types';
 import { getMonthFromDate } from '@/utils/date';
 
 import classes from './BudgetItem.module.scss';
 
-const BudgetItem: React.FC = () => {
-  const data = {
-    title: 'My plan for ',
-    date: new Date(),
-    income: 2000,
-    investment: 2000,
-  };
+interface IBudgetItemProps {
+  budget: IBudget;
+}
 
-  const formattedData = getMonthFromDate(data.date);
+const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
+  const formattedData = getMonthFromDate(new Date(budget.created_at));
 
   return (
     <Card className={classes.item}>
