@@ -1,4 +1,5 @@
-import { Box, Card, Divider, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Card, Divider, IconButton, Typography } from '@mui/material';
 import cn from 'classnames';
 import React from 'react';
 
@@ -34,6 +35,9 @@ const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
             <Divider />
           </Box>
         </Box>
+        <IconButton className={classes.remove}>
+          <CloseIcon className={classes.icon} />
+        </IconButton>
       </Box>
     </Card>
   );
