@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { FormEvent, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
@@ -33,6 +33,9 @@ const SettingsPage: React.FC = () => {
               ))}
             </Select>
           </FormControl>
+          <Button type="submit" variant="contained">
+            Save
+          </Button>
         </Box>
       </Container>
     </Box>
