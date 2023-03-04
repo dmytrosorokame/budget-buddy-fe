@@ -1,16 +1,25 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import { selectAllBudgets } from '@/redux/budgets/budgets.selectors';
-import { useAppSelector } from '@/redux/store';
+import { getAllBudgets } from '@/redux/budgets/budgets.thunks';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
 import Navigation from 'components/shared/navigation/Navigation';
 
 import BudgetsList from './components/BudgetsList/BudgetsList';
 import classes from './Home.module.scss';
 
 const Home: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   const budgets = useAppSelector(selectAllBudgets);
+
+  useEffect(() => {
+    if (budgets) return;
+
+    dispatch(getAllBudgets());
+  }, [dispatch, budgets]);
 
   return (
     <Box>

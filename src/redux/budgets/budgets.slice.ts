@@ -5,13 +5,13 @@ import { IBudget } from './../../types/budgets.types';
 import { deleteBudget, getAllBudgets } from './budgets.thunks';
 
 export interface IBudgetsState {
-  budgets: IBudget[];
+  budgets: IBudget[] | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: IBudgetsState = {
-  budgets: [],
+  budgets: null,
   isLoading: false,
   error: null,
 };
