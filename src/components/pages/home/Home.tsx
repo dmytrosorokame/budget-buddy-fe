@@ -2,12 +2,18 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import Container from '@/components/shared/container/Container';
+import { selectAllBudgets } from '@/redux/budgets/budgets.selectors';
+import { useAppSelector } from '@/redux/store';
 import Navigation from 'components/shared/navigation/Navigation';
 
 import BudgetsList from './components/BudgetsList/BudgetsList';
 import classes from './Home.module.scss';
 
 const Home: React.FC = () => {
+  const budgets = useAppSelector(selectAllBudgets);
+
+  console.warn({ budgets });
+
   return (
     <Box>
       <Navigation />

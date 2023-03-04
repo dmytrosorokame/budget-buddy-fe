@@ -46,10 +46,10 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isAuthenticated = true;
 
-      localStorage.setItem('token', payload.access_token);
+      localStorage.setItem('token', payload?.access_token);
     });
     builder.addCase(singUp.rejected, (state, { payload }: AnyAction): void => {
-      const errorMessage = payload.message ?? 'Something went wrong';
+      const errorMessage = payload?.message ?? 'Something went wrong';
 
       toast.dismiss();
       toast.error('Register failed!');
@@ -68,10 +68,10 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isAuthenticated = true;
 
-      localStorage.setItem('token', payload.access_token);
+      localStorage.setItem('token', payload?.access_token);
     });
     builder.addCase(login.rejected, (state, { payload }: AnyAction): void => {
-      const errorMessage = payload.message ?? 'Something went wrong';
+      const errorMessage = payload?.message ?? 'Something went wrong';
 
       toast.dismiss();
       toast.error(errorMessage);

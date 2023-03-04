@@ -12,7 +12,7 @@ export class BudgetsApi {
   }
 
   public async getAll(): Promise<IBudget[]> {
-    const response = await this.axios.get(`${this.apiUrl}/budgets`);
+    const response = await this.axios.get(`${this.apiUrl}/budget`);
 
     return response.data;
   }
