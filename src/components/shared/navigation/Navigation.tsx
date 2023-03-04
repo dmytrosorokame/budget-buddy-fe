@@ -23,7 +23,7 @@ const Navigation: React.FC<INavigationProps> = ({ title = 'BuddyBudget' }) => {
   };
 
   const settingsClickHandler = (): void => {
-    router.push('/');
+    router.push('/settings');
   };
 
   const logoutHandler = (): void => {
