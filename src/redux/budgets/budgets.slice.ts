@@ -2,7 +2,7 @@ import { createSlice, AnyAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
 import { IBudget } from './../../types/budgets.types';
-import { getAllBudgets } from './budgets.thunks';
+import { deleteBudget, getAllBudgets } from './budgets.thunks';
 
 export interface IBudgetsState {
   budgets: IBudget[];
@@ -10,7 +10,7 @@ export interface IBudgetsState {
   error: string | null;
 }
 
-const initialState = {
+const initialState: IBudgetsState = {
   budgets: [],
   isLoading: false,
   error: null,
@@ -39,6 +39,19 @@ export const budgetsSlice = createSlice({
       toast.error(errorMessage);
 
       state.isLoading = false;
+      state.error = errorMessage;
+    });
+
+    builder.addCase(deleteBudget.fulfilled, (state, { payload }: AnyAction) => {
+      toast.success('Budget deleted!');
+
+      state.budgets = state.budgets.filter((budget) => budget.id !== payload.id);
+    });
+    builder.addCase(deleteBudget.rejected, (state, { payload }: AnyAction) => {
+      const errorMessage = payload?.message ?? 'Something went wrong';
+
+      toast.error(errorMessage);
+
       state.error = errorMessage;
     });
   },

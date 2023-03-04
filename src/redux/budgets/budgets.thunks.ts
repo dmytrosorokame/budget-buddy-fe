@@ -18,3 +18,19 @@ export const getAllBudgets = createAsyncThunk('budgets/getAllBudgets', async (n,
     return rejectWithValue(typedError.response.data);
   }
 });
+
+export const deleteBudget = createAsyncThunk('budgets/deleteBudget', async (budgetId: number, { rejectWithValue }) => {
+  try {
+    const result = await api.budgetsApi.delete(budgetId);
+
+    return result;
+  } catch (error: unknown) {
+    const typedError = error as AxiosError;
+
+    if (!typedError.response) {
+      throw typedError;
+    }
+
+    return rejectWithValue(typedError.response.data);
+  }
+});

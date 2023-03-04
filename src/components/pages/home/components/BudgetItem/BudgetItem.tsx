@@ -3,6 +3,9 @@ import { Box, Card, Divider, IconButton, Typography } from '@mui/material';
 import cn from 'classnames';
 import React from 'react';
 
+import { deleteBudget } from '@/redux/budgets/budgets.thunks';
+import { showModal } from '@/redux/confirmModal/confirmModal.slice';
+import { useAppDispatch } from '@/redux/store';
 import { IBudget } from '@/types/budgets.types';
 import { getMonthFromDate } from '@/utils/date';
 
@@ -13,7 +16,17 @@ interface IBudgetItemProps {
 }
 
 const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
+  const dispatch = useAppDispatch();
+
   const formattedData = getMonthFromDate(new Date(budget.created_at));
+
+  const deleteHandler = (): void => {
+    dispatch(deleteBudget(budget.id));
+  };
+
+  const deleteButtonClickHandler = (): void => {
+    dispatch(showModal({ title: 'Do you want delete this budget?', okClickHandler: deleteHandler }));
+  };
 
   return (
     <Card className={classes.item}>
@@ -35,7 +48,7 @@ const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
             <Divider />
           </Box>
         </Box>
-        <IconButton className={classes.remove}>
+        <IconButton onClick={deleteButtonClickHandler} className={classes.remove}>
           <CloseIcon className={classes.icon} />
         </IconButton>
       </Box>

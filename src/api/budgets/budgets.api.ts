@@ -16,4 +16,10 @@ export class BudgetsApi {
 
     return response.data;
   }
+
+  public async delete(budgetId: number): Promise<IBudget> {
+    const response = await this.axios.delete(`${this.apiUrl}/budget/${budgetId}`);
+
+    return response.data;
+  }
 }
