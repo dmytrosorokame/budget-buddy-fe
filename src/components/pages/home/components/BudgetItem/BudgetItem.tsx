@@ -1,20 +1,32 @@
-import { Box, Card, Divider, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Card, Divider, IconButton, Typography } from '@mui/material';
 import cn from 'classnames';
 import React from 'react';
 
+import { deleteBudget } from '@/redux/budgets/budgets.thunks';
+import { showModal } from '@/redux/confirmModal/confirmModal.slice';
+import { useAppDispatch } from '@/redux/store';
+import { IBudget } from '@/types/budgets.types';
 import { getMonthFromDate } from '@/utils/date';
 
 import classes from './BudgetItem.module.scss';
 
-const BudgetItem: React.FC = () => {
-  const data = {
-    title: 'My plan for ',
-    date: new Date(),
-    income: 2000,
-    investment: 2000,
+interface IBudgetItemProps {
+  budget: IBudget;
+}
+
+const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
+  const dispatch = useAppDispatch();
+
+  const formattedData = getMonthFromDate(new Date(budget.created_at));
+
+  const deleteHandler = (): void => {
+    dispatch(deleteBudget(budget.id));
   };
 
-  const formattedData = getMonthFromDate(data.date);
+  const deleteButtonClickHandler = (): void => {
+    dispatch(showModal({ title: 'Do you want delete this budget?', okClickHandler: deleteHandler }));
+  };
 
   return (
     <Card className={classes.item}>
@@ -36,6 +48,9 @@ const BudgetItem: React.FC = () => {
             <Divider />
           </Box>
         </Box>
+        <IconButton onClick={deleteButtonClickHandler} className={classes.remove}>
+          <CloseIcon className={classes.icon} />
+        </IconButton>
       </Box>
     </Card>
   );

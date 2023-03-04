@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
@@ -82,15 +82,6 @@ const CreateBudget: React.FC = () => {
               className={classes.input}
             />
           </LocalizationProvider>
-
-          <FormControl fullWidth className={classes.input}>
-            <InputLabel id="currency-input">Currency</InputLabel>
-            <Select labelId="currency-input" label="Currency">
-              <MenuItem value="UAH">UAH</MenuItem>
-              <MenuItem value="USD">USD</MenuItem>
-              <MenuItem value="EUR">EUR</MenuItem>
-            </Select>
-          </FormControl>
 
           <TextField
             value={incomeValue}
