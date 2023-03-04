@@ -1,5 +1,4 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -19,7 +18,15 @@ const Navigation: React.FC<INavigationProps> = ({ title = 'BuddyBudget' }) => {
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  const handleLogout = (): void => {
+  const dashboardClickHandler = (): void => {
+    router.push('/');
+  };
+
+  const settingsClickHandler = (): void => {
+    router.push('/');
+  };
+
+  const logoutHandler = (): void => {
     dispatch(logout());
     router.push('/login');
 
@@ -27,7 +34,7 @@ const Navigation: React.FC<INavigationProps> = ({ title = 'BuddyBudget' }) => {
   };
 
   const logoutButtonClickHandler = (): void => {
-    dispatch(showModal({ title: 'Do you want logout?', okClickHandler: handleLogout }));
+    dispatch(showModal({ title: 'Do you want logout?', okClickHandler: logoutHandler }));
   };
 
   useEffect(() => {
@@ -39,12 +46,15 @@ const Navigation: React.FC<INavigationProps> = ({ title = 'BuddyBudget' }) => {
   return (
     <AppBar>
       <Toolbar>
-        <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-          <MenuIcon />
-        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
+        <Button color="inherit" onClick={dashboardClickHandler}>
+          Dashboard
+        </Button>
+        <Button color="inherit" onClick={settingsClickHandler}>
+          Settings
+        </Button>
         <Button color="inherit" onClick={logoutButtonClickHandler}>
           Logout
         </Button>
