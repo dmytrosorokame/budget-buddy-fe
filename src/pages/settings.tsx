@@ -1,12 +1,26 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
 import { Currency, CURRENCY_ARRAY } from '@/constants/currency.constant';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { selectUserCurrency } from '@/redux/user/user.selectors';
+import { getMe } from '@/redux/user/user.thunks';
 
 const SettingsPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [currencyValue, setCurrencyValue] = useState<Currency | undefined>();
+
+  const userCurrency = useAppSelector(selectUserCurrency);
+
+  useEffect(() => {
+    dispatch(getMe());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setCurrencyValue(userCurrency);
+  }, [userCurrency]);
 
   const currencyChangeHandler = (event: SelectChangeEvent<Currency>): void => {
     const newValue = event.target.value as Currency;
