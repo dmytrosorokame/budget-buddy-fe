@@ -40,21 +40,21 @@ const CreateBudget: React.FC = () => {
   };
 
   const mandatoryExpensesSum = useMemo(
-    () => mandatoryExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    () => mandatoryExpenses.reduce((acc, expense) => acc + expense.amount, 0),
     [mandatoryExpenses],
   );
 
   const otherExpensesSum = useMemo(
-    () => otherExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    () => otherExpenses.reduce((acc, expense) => acc + expense.amount, 0),
     [otherExpenses],
   );
 
   const investmentsSum = useMemo(
-    () => investmentsExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    () => investmentsExpenses.reduce((acc, expense) => acc + expense.amount, 0),
     [investmentsExpenses],
   );
 
-  const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
+  const incomeWithoutMandatoryExpenses = incomeValue - mandatoryExpensesSum;
   const incomeWithoutMandatoryAndOtherExpenses = incomeWithoutMandatoryExpenses - otherExpensesSum;
   const incomeWithoutAllExpensesAndInvestments = incomeWithoutMandatoryAndOtherExpenses - investmentsSum;
 
