@@ -1,4 +1,4 @@
-export enum ExpensesTypes {
+export enum ExpenseTypes {
   MANDATORY = 'mandatory',
   OTHER = 'other',
   INVESTMENTS = 'investments',
@@ -6,9 +6,9 @@ export enum ExpensesTypes {
 
 export interface IExpense {
   id: string;
-  type: ExpensesTypes;
+  type: ExpenseTypes;
   name: string;
-  amount: string;
+  amount: number;
 }
 
 export type TExpenseCreate = Omit<IExpense, 'id'>;

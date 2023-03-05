@@ -3,26 +3,36 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
-import React, { useMemo, useState } from 'react';
+import React, { FormEvent, useMemo, useState } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
-import { useExpensesContext } from '@/providers/dynamic-expenses.provider';
-import { ExpensesTypes } from '@/types/expenses.types';
+import { useExpensesContext } from '@/providers/expenses.provider';
+import { createBudget } from '@/redux/budgets/budgets.thunks';
+import { useAppDispatch } from '@/redux/store';
+import { IBudgetCreate } from '@/types/budgets.types';
+import { ExpenseTypes, TExpenseCreate } from '@/types/expenses.types';
 
 import Expenses from './components/Expenses/Expenses';
 import classes from './CreateBudget.module.scss';
 
 const CreateBudget: React.FC = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [dateValue, setDateValue] = useState<DateTime | null>(null);
-  const [incomeValue, setIncomeValue] = useState('');
+  const [incomeValue, setIncomeValue] = useState(0);
 
   const { expenses } = useExpensesContext();
 
+  const formIsValid = dateValue && incomeValue && expenses;
+
+  const mandatoryExpenses = expenses.filter((expense) => expense.type === ExpenseTypes.MANDATORY);
+  const otherExpenses = expenses.filter((expense) => expense.type === ExpenseTypes.OTHER);
+  const investmentsExpenses = expenses.filter((expense) => expense.type === ExpenseTypes.INVESTMENTS);
+
   const incomeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setIncomeValue(event.target.value);
+    setIncomeValue(+event.target.value);
   };
 
   const dateChangeHandler = (newValue: DateTime | null): void => {
@@ -30,18 +40,18 @@ const CreateBudget: React.FC = () => {
   };
 
   const mandatoryExpensesSum = useMemo(
-    () => expenses[ExpensesTypes.MANDATORY].reduce((acc, expense) => acc + +expense.amount, 0),
-    [expenses],
+    () => mandatoryExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    [mandatoryExpenses],
   );
 
   const otherExpensesSum = useMemo(
-    () => expenses[ExpensesTypes.OTHER].reduce((acc, expense) => acc + +expense.amount, 0),
-    [expenses],
+    () => otherExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    [otherExpenses],
   );
 
   const investmentsSum = useMemo(
-    () => expenses[ExpensesTypes.INVESTMENTS].reduce((acc, expense) => acc + +expense.amount, 0),
-    [expenses],
+    () => investmentsExpenses.reduce((acc, expense) => acc + +expense.amount, 0),
+    [investmentsExpenses],
   );
 
   const incomeWithoutMandatoryExpenses = +incomeValue - mandatoryExpensesSum;
@@ -57,16 +67,29 @@ const CreateBudget: React.FC = () => {
     router.push('/');
   };
 
-  const saveHandler = (): void => {
-    console.warn('Saved');
-    router.push('/');
+  const submitFormHandler = (event: FormEvent): void => {
+    event.preventDefault();
+
+    const expensesWithoutId: TExpenseCreate[] = expenses.map((expense) => ({
+      type: expense.type,
+      name: expense.name,
+      amount: expense.amount,
+    }));
+
+    const budgetData: IBudgetCreate = {
+      created_at: dateValue?.toISO(),
+      income: incomeValue,
+      expenses: expensesWithoutId,
+    };
+
+    dispatch(createBudget(budgetData));
   };
 
   return (
     <Box>
       <Navigation title="Create budget" />
       <Container>
-        <Box component="form" className={classes.form}>
+        <Box component="form" className={classes.form} onSubmit={submitFormHandler}>
           <Typography variant="h4" className={classes.title}>
             Create budget 💰
           </Typography>
@@ -93,21 +116,24 @@ const CreateBudget: React.FC = () => {
 
           <Expenses
             title="Mandatory Expenses"
-            type={ExpensesTypes.MANDATORY}
+            type={ExpenseTypes.MANDATORY}
+            expenses={mandatoryExpenses}
             resultText="Income without Mandatory Expenses"
             resultSum={incomeWithoutMandatoryExpenses}
           />
 
           <Expenses
             title="Other Expenses"
-            type={ExpensesTypes.OTHER}
+            type={ExpenseTypes.OTHER}
+            expenses={otherExpenses}
             resultText="Income without Mandatory and Other Expenses"
             resultSum={incomeWithoutMandatoryAndOtherExpenses}
           />
 
           <Expenses
             title="Investments"
-            type={ExpensesTypes.INVESTMENTS}
+            type={ExpenseTypes.INVESTMENTS}
+            expenses={investmentsExpenses}
             resultText="Income without all expenses and investments"
             resultSum={incomeWithoutAllExpensesAndInvestments}
           />
@@ -122,7 +148,7 @@ const CreateBudget: React.FC = () => {
             <Button className={classes.button} variant="outlined" onClick={cancelHandler}>
               Cancel
             </Button>
-            <Button className={classes.button} variant="contained" onClick={saveHandler}>
+            <Button type="submit" className={classes.button} variant="contained" disabled={!formIsValid}>
               Save
             </Button>
           </Box>

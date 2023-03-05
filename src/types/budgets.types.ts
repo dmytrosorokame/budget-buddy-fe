@@ -8,7 +8,7 @@ export interface IBudget {
 }
 
 export interface IBudgetCreate {
-  created_at: Date;
+  created_at: string;
   income: number;
   expenses: TExpenseCreate[];
 }
