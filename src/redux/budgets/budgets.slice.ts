@@ -2,7 +2,7 @@ import { createSlice, AnyAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
 import { IBudget } from './../../types/budgets.types';
-import { deleteBudget, getAllBudgets } from './budgets.thunks';
+import { createBudget, deleteBudget, getAllBudgets } from './budgets.thunks';
 
 export interface IBudgetsState {
   budgets: IBudget[] | null;
@@ -45,13 +45,35 @@ export const budgetsSlice = createSlice({
     builder.addCase(deleteBudget.fulfilled, (state, { payload }: AnyAction) => {
       toast.success('Budget deleted!');
 
-      state.budgets = state.budgets.filter((budget) => budget.id !== payload.id);
+      if (state.budgets) {
+        state.budgets = state.budgets.filter((budget) => budget.id !== payload.id);
+      }
     });
     builder.addCase(deleteBudget.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
 
       toast.error(errorMessage);
 
+      state.error = errorMessage;
+    });
+
+    builder.addCase(createBudget.pending, (state) => {
+      toast.loading('Budget creating...');
+      state.isLoading = true;
+    });
+    builder.addCase(createBudget.fulfilled, (state, { payload }: AnyAction) => {
+      toast.dismiss();
+      toast.success('Budget created!');
+
+      state.isLoading = false;
+      state.budgets = state.budgets ? [...state.budgets, payload] : [payload];
+    });
+    builder.addCase(createBudget.rejected, (state, { payload }: AnyAction) => {
+      const errorMessage = payload?.message ?? 'Something went wrong';
+
+      toast.error(errorMessage);
+
+      state.isLoading = false;
       state.error = errorMessage;
     });
   },
