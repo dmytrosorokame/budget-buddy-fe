@@ -4,11 +4,12 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
 import { useExpensesContext } from '@/providers/expenses.provider';
-import { createBudget } from '@/redux/budgets/budgets.thunks';
+import { createBudget, getAllBudgets } from '@/redux/budgets/budgets.thunks';
 import { useAppDispatch } from '@/redux/store';
 import { IBudgetCreate } from '@/types/budgets.types';
 import { ExpenseTypes, TExpenseCreate } from '@/types/expenses.types';
@@ -76,13 +77,22 @@ const CreateBudget: React.FC = () => {
       amount: expense.amount,
     }));
 
+    if (!dateValue || !incomeValue || !expenses) {
+      toast.error('Invalid data');
+
+      return;
+    }
+
     const budgetData: IBudgetCreate = {
-      created_at: dateValue?.toISO(),
+      created_at: dateValue.toISO(),
       income: incomeValue,
       expenses: expensesWithoutId,
     };
 
     dispatch(createBudget(budgetData));
+    dispatch(getAllBudgets());
+
+    router.push('/');
   };
 
   return (

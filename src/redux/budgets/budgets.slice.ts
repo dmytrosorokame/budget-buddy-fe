@@ -71,6 +71,7 @@ export const budgetsSlice = createSlice({
     builder.addCase(createBudget.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
 
+      toast.dismiss();
       toast.error(errorMessage);
 
       state.isLoading = false;
