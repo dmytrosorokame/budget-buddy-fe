@@ -27,6 +27,8 @@ const SettingsForm: React.FC = () => {
   };
 
   useEffect(() => {
+    if (userCurrency) return;
+
     dispatch(getMe());
   }, [dispatch]);
 
