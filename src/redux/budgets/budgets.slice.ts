@@ -1,6 +1,8 @@
 import { createSlice, AnyAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
+import { sortBudgetsByDate } from '@/utils/date';
+
 import { IBudget } from './../../types/budgets.types';
 import { createBudget, deleteBudget, getAllBudgets } from './budgets.thunks';
 
@@ -29,8 +31,10 @@ export const budgetsSlice = createSlice({
       toast.dismiss();
       toast.success('Your budgets loaded!');
 
+      const sortedBudgets = payload.sort(sortBudgetsByDate);
+
       state.isLoading = false;
-      state.budgets = payload;
+      state.budgets = sortedBudgets;
     });
     builder.addCase(getAllBudgets.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
