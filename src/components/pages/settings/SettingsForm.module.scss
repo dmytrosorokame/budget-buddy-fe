@@ -10,7 +10,11 @@
 }
 
 .button {
+    width: 200px;
+}
+
+.wrapper {
     margin: 20px auto;
     display: flex;
-    width: 200px;
+    justify-content: center;
 }

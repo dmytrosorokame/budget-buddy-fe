@@ -10,6 +10,7 @@ import classes from './SettingsForm.module.scss';
 
 const SettingsForm: React.FC = () => {
   const dispatch = useAppDispatch();
+
   const [currencyValue, setCurrencyValue] = useState<Currency | undefined>(Currency.USD);
 
   const userCurrency = useAppSelector(selectUserCurrency);
@@ -30,7 +31,7 @@ const SettingsForm: React.FC = () => {
     if (userCurrency) return;
 
     dispatch(getMe());
-  }, [dispatch]);
+  }, [dispatch, userCurrency]);
 
   useEffect(() => {
     setCurrencyValue(userCurrency);
@@ -51,9 +52,11 @@ const SettingsForm: React.FC = () => {
           ))}
         </Select>
       </FormControl>
-      <Button type="submit" variant="contained" className={classes.button}>
-        Save
-      </Button>
+      <Box className={classes.wrapper}>
+        <Button type="submit" variant="contained" className={classes.button}>
+          Save
+        </Button>
+      </Box>
     </Box>
   );
 };
