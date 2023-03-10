@@ -2,9 +2,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 import React from 'react';
 
+import Expense from '@/components/generic/budgets/Expense/Expense';
 import { useExpensesContext } from '@/providers/expenses.provider';
 import { ExpenseTypes, IExpense } from '@/types/expenses.types';
-import Expense from 'components/pages/create-budget/components/Expense/Expense';
 
 import classes from './Expenses.module.scss';
 

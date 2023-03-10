@@ -4,23 +4,34 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
 import { useRouter } from 'next/router';
 import React, { FormEvent, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import Expenses from '@/components/generic/budgets/Expenses/Expenses';
 import { useExpensesContext } from '@/providers/expenses.provider';
-import { IBudget } from '@/types/budgets.types';
+import { IBudget, ISubmitBudgetFormData } from '@/types/budgets.types';
 import { ExpenseTypes } from '@/types/expenses.types';
 
-import classes from './EditBudgetForm.module.scss';
+import classes from './BudgetForm.module.scss';
+import Expenses from './Expenses/Expenses';
 
-interface IEditBudgetFormProps {
-  budget: IBudget;
+interface IBudgetFormProps {
+  predefinedBudget?: IBudget;
+  onSubmit: (data: ISubmitBudgetFormData) => void;
+  title?: string;
+  okButtonLabel?: string;
 }
 
-const EditBudgetForm: React.FC<IEditBudgetFormProps> = ({ budget }) => {
+const BudgetForm: React.FC<IBudgetFormProps> = ({
+  predefinedBudget = { created_at: null, income: 0, id: null },
+  onSubmit,
+  title = 'Budget 💰',
+  okButtonLabel = 'Save',
+}) => {
   const router = useRouter();
 
-  const [dateValue, setDateValue] = useState<DateTime | null>(DateTime.fromJSDate(new Date(budget.created_at)));
-  const [incomeValue, setIncomeValue] = useState(budget.income);
+  const defaultDate = predefinedBudget?.created_at ? DateTime.fromJSDate(new Date(predefinedBudget.created_at)) : null;
+
+  const [dateValue, setDateValue] = useState<DateTime | null>(defaultDate);
+  const [incomeValue, setIncomeValue] = useState(predefinedBudget.income);
 
   const { expenses } = useExpensesContext();
 
@@ -68,12 +79,27 @@ const EditBudgetForm: React.FC<IEditBudgetFormProps> = ({ budget }) => {
 
   const submitFormHandler = (event: FormEvent): void => {
     event.preventDefault();
+
+    if (!expenses || !dateValue || incomeValue) {
+      toast.error('Invalid data');
+
+      return;
+    }
+
+    const submitData: ISubmitBudgetFormData = {
+      id: predefinedBudget.id,
+      date: dateValue.toISO(),
+      income: incomeValue,
+      expenses,
+    };
+
+    onSubmit(submitData);
   };
 
   return (
     <Box component="form" className={classes.form} onSubmit={submitFormHandler}>
       <Typography variant="h4" className={classes.title}>
-        Budget 💰
+        {title}
       </Typography>
 
       <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -128,14 +154,14 @@ const EditBudgetForm: React.FC<IEditBudgetFormProps> = ({ budget }) => {
 
       <Box className={classes.buttons}>
         <Button className={classes.button} variant="outlined" onClick={cancelHandler}>
-          Back
+          Cancel
         </Button>
         <Button type="submit" className={classes.button} variant="contained" disabled={!formIsValid}>
-          Save
+          {okButtonLabel}
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default EditBudgetForm;
+export default BudgetForm;

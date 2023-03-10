@@ -14,15 +14,15 @@ import EditBudgetForm from './components/EditBudgetForm';
 const EditBudget: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { id: budgetId } = router.query;
 
+  const { id: budgetId } = router.query;
   const budget = useAppSelector((state) => selectBudgetById(Number(budgetId), state));
 
   useEffect(() => {
     if (budget || !Number(budgetId)) return;
 
     dispatch(getBudget(Number(budgetId)));
-  }, [budget, dispatch, budgetId]);
+  }, [budget, budgetId, dispatch]);
 
   return (
     <Box>

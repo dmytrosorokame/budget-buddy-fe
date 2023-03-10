@@ -12,3 +12,10 @@ export interface IBudgetCreate {
   income: number;
   expenses: TExpenseCreate[];
 }
+
+export interface ISubmitBudgetFormData {
+  id: number | null;
+  expenses: IExpense[];
+  date: string;
+  income: number;
+}
