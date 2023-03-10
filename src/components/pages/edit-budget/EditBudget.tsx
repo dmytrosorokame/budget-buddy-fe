@@ -1,12 +1,15 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
+import { ExpensesProvider } from '@/providers/expenses.provider';
 import { selectBudgetById } from '@/redux/budgets/budgets.selectors';
 import { getBudget } from '@/redux/budgets/budgets.thunks';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
+
+import EditBudgetForm from './components/EditBudgetForm';
 
 const EditBudget: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +27,15 @@ const EditBudget: React.FC = () => {
   return (
     <Box>
       <Navigation />
-      <Container>{budget?.expenses.map((expense) => expense.name)}</Container>
+      <Container>
+        {budget ? (
+          <ExpensesProvider defaultExpenses={budget.expenses}>
+            <EditBudgetForm budget={budget} />
+          </ExpensesProvider>
+        ) : (
+          <CircularProgress />
+        )}
+      </Container>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ExpenseTypes, IExpense } from '@/types/expenses.types';
@@ -29,10 +29,15 @@ const expensesContext = createContext<IExpensesContext>({
 
 export const useExpensesContext = (): IExpensesContext => useContext(expensesContext);
 
-export const ExpensesProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [expenses, setExpenses] = useState<IExpense[]>([]);
+interface IExpensesProviderProps {
+  children: JSX.Element;
+  defaultExpenses?: IExpense[];
+}
 
-  const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string): void => {
+export const ExpensesProvider: React.FC<IExpensesProviderProps> = ({ children, defaultExpenses = [] }) => {
+  const [expenses, setExpenses] = useState<IExpense[]>(defaultExpenses);
+
+  const changeExpenseHandler = (id: string, fieldName: keyof IExpense, value: string | number): void => {
     const expensesCopy = [...expenses];
 
     const currentExpenseIndex = expensesCopy.findIndex((expense) => expense.id === id);
