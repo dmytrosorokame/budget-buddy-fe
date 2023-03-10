@@ -80,7 +80,7 @@ const BudgetForm: React.FC<IBudgetFormProps> = ({
   const submitFormHandler = (event: FormEvent): void => {
     event.preventDefault();
 
-    if (!expenses || !dateValue || incomeValue) {
+    if (!expenses || !dateValue || !incomeValue) {
       toast.error('Invalid data');
 
       return;

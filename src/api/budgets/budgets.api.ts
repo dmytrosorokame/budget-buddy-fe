@@ -34,4 +34,10 @@ export class BudgetsApi {
 
     return response.data;
   }
+
+  public async update(budgetId: number, dto: Partial<IBudget>): Promise<IBudget> {
+    const response = await this.axios.patch(`${this.apiUrl}/budget/${budgetId}`, dto);
+
+    return response.data;
+  }
 }

@@ -4,16 +4,16 @@ import { toast } from 'react-toastify';
 import { sortBudgetsByDate } from '@/utils/date';
 
 import { IBudget } from './../../types/budgets.types';
-import { createBudget, deleteBudget, getAllBudgets, getBudget } from './budgets.thunks';
+import { createBudget, deleteBudget, getAllBudgets, getBudget, updateBudget } from './budgets.thunks';
 
 export interface IBudgetsState {
-  budgets: IBudget[] | null;
+  budgets: IBudget[];
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: IBudgetsState = {
-  budgets: null,
+  budgets: [],
   isLoading: false,
   error: null,
 };
@@ -54,12 +54,8 @@ export const budgetsSlice = createSlice({
       toast.dismiss();
       toast.success('Your budget loaded!');
 
-      if (state.budgets) {
-        state.budgets.push(payload);
-        state.budgets = state.budgets.sort(sortBudgetsByDate);
-      } else {
-        state.budgets = [payload];
-      }
+      state.budgets.push(payload);
+      state.budgets = state.budgets.sort(sortBudgetsByDate);
 
       state.isLoading = false;
     });
@@ -76,9 +72,7 @@ export const budgetsSlice = createSlice({
     builder.addCase(deleteBudget.fulfilled, (state, { payload }: AnyAction) => {
       toast.success('Budget deleted!');
 
-      if (state.budgets) {
-        state.budgets = state.budgets.filter((budget) => budget.id !== payload.id);
-      }
+      state.budgets = state.budgets.filter((budget) => budget.id !== payload.id);
     });
     builder.addCase(deleteBudget.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
@@ -97,9 +91,32 @@ export const budgetsSlice = createSlice({
       toast.success('Budget created!');
 
       state.isLoading = false;
-      state.budgets = state.budgets ? [...state.budgets, payload] : [payload];
+      state.budgets = [...state.budgets, payload];
     });
     builder.addCase(createBudget.rejected, (state, { payload }: AnyAction) => {
+      const errorMessage = payload?.message ?? 'Something went wrong';
+
+      toast.dismiss();
+      toast.error(errorMessage);
+
+      state.isLoading = false;
+      state.error = errorMessage;
+    });
+
+    builder.addCase(updateBudget.pending, (state) => {
+      toast.loading('Budget updating...');
+      state.isLoading = true;
+    });
+    builder.addCase(updateBudget.fulfilled, (state, { payload }: AnyAction) => {
+      toast.dismiss();
+      toast.success('Budget updated!');
+
+      const changedBudgetId = state.budgets.findIndex((budget) => budget.id === payload.id);
+
+      state.budgets[changedBudgetId] = payload;
+      state.isLoading = false;
+    });
+    builder.addCase(updateBudget.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
 
       toast.dismiss();
