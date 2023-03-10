@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Box, ButtonBase, Card, Divider, IconButton, Typography } from '@mui/material';
 import cn from 'classnames';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 
 import { deleteBudget } from '@/redux/budgets/budgets.thunks';
 import { showModal } from '@/redux/confirmModal/confirmModal.slice';
@@ -26,7 +26,8 @@ const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
     dispatch(deleteBudget(budget.id));
   };
 
-  const deleteButtonClickHandler = (): void => {
+  const deleteButtonClickHandler = (event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
     dispatch(showModal({ title: 'Do you want delete this budget?', okClickHandler: deleteHandler }));
   };
 
