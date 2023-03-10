@@ -2,7 +2,7 @@ import { IExpense, TExpenseCreate } from './expenses.types';
 
 export interface IBudget {
   id: number;
-  created_at: Date;
+  created_at: Date | string;
   income: number;
   expenses: IExpense[];
 }

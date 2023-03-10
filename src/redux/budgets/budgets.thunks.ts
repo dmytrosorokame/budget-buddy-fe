@@ -73,9 +73,9 @@ export const createBudget = createAsyncThunk(
 
 export const updateBudget = createAsyncThunk(
   'budgets/updateBudget',
-  async (payload: { budgetId: number; dto: Partial<IBudget> }, { rejectWithValue }) => {
+  async ({ budgetId, dto }: { budgetId: number; dto: Partial<IBudget> }, { rejectWithValue }) => {
     try {
-      const result = await api.budgetsApi.create(payload);
+      const result = await api.budgetsApi.update(budgetId, dto);
 
       return result;
     } catch (error: unknown) {

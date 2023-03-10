@@ -1,13 +1,14 @@
 import { Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import BudgetForm from '@/components/generic/budgets/BudgetForm';
 import Container from '@/components/shared/container/Container';
 import Navigation from '@/components/shared/navigation/Navigation';
 import { ExpensesProvider } from '@/providers/expenses.provider';
 import { selectBudgetById } from '@/redux/budgets/budgets.selectors';
-import { getBudget } from '@/redux/budgets/budgets.thunks';
+import { getBudget, updateBudget } from '@/redux/budgets/budgets.thunks';
 import { useAppDispatch, useAppSelector } from '@/redux/store';
 import { ISubmitBudgetFormData } from '@/types/budgets.types';
 
@@ -18,8 +19,14 @@ const EditBudget: React.FC = () => {
   const { id: budgetId } = router.query;
   const budget = useAppSelector((state) => selectBudgetById(Number(budgetId), state));
 
-  const submitFormHandler = (submitData: ISubmitBudgetFormData): void => {
-    console.warn({ submitData });
+  const submitFormHandler = ({ id, date, income, expenses }: ISubmitBudgetFormData): void => {
+    if (!id) {
+      toast.error('No provided id');
+
+      return;
+    }
+
+    dispatch(updateBudget({ budgetId: id, dto: { created_at: date, income, expenses } }));
   };
 
   useEffect(() => {
