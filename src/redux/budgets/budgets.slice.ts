@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { sortBudgetsByDate } from '@/utils/date';
 
 import { IBudget } from './../../types/budgets.types';
-import { createBudget, deleteBudget, getAllBudgets } from './budgets.thunks';
+import { createBudget, deleteBudget, getAllBudgets, getBudget } from './budgets.thunks';
 
 export interface IBudgetsState {
   budgets: IBudget[] | null;
@@ -37,6 +37,33 @@ export const budgetsSlice = createSlice({
       state.budgets = sortedBudgets;
     });
     builder.addCase(getAllBudgets.rejected, (state, { payload }: AnyAction) => {
+      const errorMessage = payload?.message ?? 'Something went wrong';
+
+      toast.dismiss();
+      toast.error(errorMessage);
+
+      state.isLoading = false;
+      state.error = errorMessage;
+    });
+
+    builder.addCase(getBudget.pending, (state) => {
+      toast.loading('Getting budget...');
+      state.isLoading = true;
+    });
+    builder.addCase(getBudget.fulfilled, (state, { payload }: AnyAction) => {
+      toast.dismiss();
+      toast.success('Your budget loaded!');
+
+      if (state.budgets) {
+        state.budgets.push(payload);
+        state.budgets = state.budgets.sort(sortBudgetsByDate);
+      } else {
+        state.budgets = [payload];
+      }
+
+      state.isLoading = false;
+    });
+    builder.addCase(getBudget.rejected, (state, { payload }: AnyAction) => {
       const errorMessage = payload?.message ?? 'Something went wrong';
 
       toast.dismiss();
