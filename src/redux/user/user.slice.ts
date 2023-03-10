@@ -2,7 +2,7 @@ import { createSlice, AnyAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
 import { Currency } from './../../constants/currency.constant';
-import { getMe } from './user.thunks';
+import { getMe, updateUser } from './user.thunks';
 
 export interface IUserState {
   id: number | null;
@@ -27,6 +27,13 @@ export const userSlice = createSlice({
       state.currency = payload.currency;
       state.email = payload.email;
       state.id = payload.id;
+    });
+
+    builder.addCase(updateUser.fulfilled, (state, { payload }: AnyAction) => {
+      toast.success('User updated!');
+
+      state.currency = payload.currency;
+      state.email = payload.email;
     });
   },
 });

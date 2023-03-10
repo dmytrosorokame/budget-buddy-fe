@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   const budgets = useAppSelector(selectAllBudgets);
 
   useEffect(() => {
-    if (budgets) return;
+    if (budgets.length) return;
 
     dispatch(getAllBudgets());
   }, [dispatch, budgets]);

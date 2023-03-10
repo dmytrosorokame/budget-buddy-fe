@@ -15,4 +15,10 @@ export class UserApi {
 
     return response.data;
   }
+
+  public async updateUser(payload: Partial<IUser>): Promise<IUser> {
+    const response = await this.axios.patch(`${this.apiUrl}/user`, payload);
+
+    return response.data;
+  }
 }

@@ -1,7 +1,8 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Card, Divider, IconButton, Typography } from '@mui/material';
+import { Box, ButtonBase, Card, Divider, IconButton, Typography } from '@mui/material';
 import cn from 'classnames';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { MouseEvent } from 'react';
 
 import { deleteBudget } from '@/redux/budgets/budgets.thunks';
 import { showModal } from '@/redux/confirmModal/confirmModal.slice';
@@ -17,6 +18,7 @@ interface IBudgetItemProps {
 
 const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const formattedData = getMonthFromDate(new Date(budget.created_at));
 
@@ -24,35 +26,42 @@ const BudgetItem: React.FC<IBudgetItemProps> = ({ budget }) => {
     dispatch(deleteBudget(budget.id));
   };
 
-  const deleteButtonClickHandler = (): void => {
+  const deleteButtonClickHandler = (event: MouseEvent<HTMLButtonElement>): void => {
+    event.stopPropagation();
     dispatch(showModal({ title: 'Do you want delete this budget?', okClickHandler: deleteHandler }));
   };
 
+  const budgetClickHandler = (): void => {
+    router.push(`/edit-budget/${budget.id}`);
+  };
+
   return (
-    <Card className={classes.item}>
-      <Box className={classes.wrapper}>
-        <Typography className={classes.month} variant="h6">
-          {formattedData}
-        </Typography>
-        <Box className={classes.stats}>
-          <Box>
-            <Typography className={cn(classes.text, classes.green)}>INCOME</Typography>
-            <Divider />
+    <ButtonBase className={classes.button} onClick={budgetClickHandler}>
+      <Card className={classes.item}>
+        <Box className={classes.wrapper}>
+          <Typography className={classes.month} variant="h6">
+            {formattedData}
+          </Typography>
+          <Box className={classes.stats}>
+            <Box>
+              <Typography className={cn(classes.text, classes.green)}>INCOME</Typography>
+              <Divider />
+            </Box>
+            <Box>
+              <Typography className={cn(classes.text, classes.red)}>EXPENSES</Typography>
+              <Divider />
+            </Box>
+            <Box>
+              <Typography className={cn(classes.text, classes.yellow)}>INVESTMENTS</Typography>
+              <Divider />
+            </Box>
           </Box>
-          <Box>
-            <Typography className={cn(classes.text, classes.red)}>EXPENSES</Typography>
-            <Divider />
-          </Box>
-          <Box>
-            <Typography className={cn(classes.text, classes.yellow)}>INVESTMENTS</Typography>
-            <Divider />
-          </Box>
+          <IconButton onClick={deleteButtonClickHandler} className={classes.remove}>
+            <CloseIcon className={classes.icon} />
+          </IconButton>
         </Box>
-        <IconButton onClick={deleteButtonClickHandler} className={classes.remove}>
-          <CloseIcon className={classes.icon} />
-        </IconButton>
-      </Box>
-    </Card>
+      </Card>
+    </ButtonBase>
   );
 };
 

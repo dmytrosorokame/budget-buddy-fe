@@ -11,7 +11,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <AppProvider>
       <Component {...pageProps} />
-      <ToastContainer />
+      <ToastContainer position="bottom-left" />
       <ConfirmModal />
     </AppProvider>
   );

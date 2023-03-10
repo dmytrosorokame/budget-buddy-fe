@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import getAxiosInstance from 'api/axios';
 
-import { IBudget } from './../../types/budgets.types';
+import { IBudget, IBudgetCreate } from './../../types/budgets.types';
 
 export class BudgetsApi {
   private axios: AxiosInstance;
@@ -17,8 +17,26 @@ export class BudgetsApi {
     return response.data;
   }
 
+  public async getOne(budgetId: number): Promise<IBudget> {
+    const response = await this.axios.get(`${this.apiUrl}/budget/${budgetId}`);
+
+    return response.data;
+  }
+
   public async delete(budgetId: number): Promise<IBudget> {
     const response = await this.axios.delete(`${this.apiUrl}/budget/${budgetId}`);
+
+    return response.data;
+  }
+
+  public async create(dto: IBudgetCreate): Promise<IBudget> {
+    const response = await this.axios.post(`${this.apiUrl}/budget`, dto);
+
+    return response.data;
+  }
+
+  public async update(budgetId: number, dto: Partial<IBudget>): Promise<IBudget> {
+    const response = await this.axios.patch(`${this.apiUrl}/budget/${budgetId}`, dto);
 
     return response.data;
   }
